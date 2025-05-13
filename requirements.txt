@@ -1,0 +1,8 @@
+requests
+pandas
+schedule
+ta
+yfinance
+openai
+sqlalchemy
+sqlite-utils
