@@ -6,3 +6,7 @@ yfinance
 openai
 sqlalchemy
 sqlite-utils
+
+
+psycopg2
+ta
