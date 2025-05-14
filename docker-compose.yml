@@ -1,0 +1,12 @@
+services:
+  mcp-bot:
+    build: .
+    container_name: mcp-aapl
+    env_file:
+      - .env
+    networks:
+      - mcp-network
+
+networks:
+  mcp-network:
+

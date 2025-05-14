@@ -1,12 +1,10 @@
-requests
-pandas
-schedule
-ta
-yfinance
-openai
-sqlalchemy
-sqlite-utils
-
-
-psycopg2
-ta
+requests                 # For HTTP requests (used in News API)
+pandas==2.1.4            # Required for time series + data analysis
+numpy==1.26.4            # Pandas/Numpy compatibility
+schedule                 # If you're doing future cron-like job scheduling
+ta                       # Technical Analysis indicators (RSI, MACD)
+yfinance                 # Price and OHLCV data
+transformers             # Sentiment scoring (FinBERT)
+sqlalchemy               # If used for ORM-style DB connections (optional)
+psycopg2-binary          # Required for PostgreSQL access
+torch

@@ -1,3 +1,6 @@
+from db.db_connection import get_connection
+from db.log_helpers import insert_headline,insert_nlp_analysis
+
 from data.collector import fetch_price_data
 
 from analysis.signal_generator import generate_signals
@@ -8,10 +11,15 @@ from trades.trade_logger import log_signal
 
 from data.news_fetcher import get_latest_headline
 
-from config import SIGNAL_STRENGTH_THRESHOLD, BOT_VERSION
+from config import SIGNAL_STRENGTH_THRESHOLD, BOT_VERSION, SYMBOL
 
-if __name__ == "__main__":
-    symbol = "AAPL"
+import schedule
+import time
+
+
+
+def run_bot():
+    symbol = SYMBOL
     df = fetch_price_data(symbol, period="7d", interval="1h")
 
     if not df.empty:
@@ -57,7 +65,6 @@ if __name__ == "__main__":
         print("Signal Logged:", signal)
 
         print("DataFrame length after ta drop:", len(df))
-
         company_name = "Apple"
         headline = get_latest_headline(symbol, company_name)
         print("Latest headline:", headline)
@@ -65,6 +72,34 @@ if __name__ == "__main__":
         sentiment = analyze_sentiment(headline)
         sentiment_summary = f"{sentiment['sentiment'].capitalize()} ({sentiment['confidence']})"
 
+        conn = get_connection()
+
+        # 1. Store the headline
+        headline_id = insert_headline(
+            conn,
+            symbol=symbol,
+            text=headline,
+            source="NewsAPI"
+        )
+
+        # 2. Store the sentiment
+        nlp_id = insert_nlp_analysis(
+            conn,
+            sentiment=sentiment["sentiment"],
+            confidence=sentiment["confidence"],
+            model="FinBERT"
+        )
+
+        conn.close()
+
 
     else:
         print("No data to analyze.")
+
+schedule.every(10).minutes.do(run_bot)
+
+run_bot()  # optional: run immediately on container start
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)

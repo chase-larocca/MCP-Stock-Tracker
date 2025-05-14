@@ -40,38 +40,43 @@ def log_signal(
     sentiment=None,
     signal_strength=None,
     executed=False,
-    source="MCP-BOT"  # fallback if not passed
+    source="MCP-BOT",
+    headline_id=None,
+    nlp_id=None
 ):
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
         INSERT INTO trades (
             symbol
-          , action
-          , signal_reason
-          , confidence_score
-          , risk_score
-          , sentiment_summary
-          , market_price
-          , signal_strength
-          , is_executed
-          , signal_only
-          , source
+        , action
+        , signal_reason
+        , confidence_score
+        , risk_score
+        , market_price
+        , signal_strength
+        , is_executed
+        , signal_only
+        , source
+        , headline_id
+        , nlp_id
         )
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """, (
         str(symbol),
         str(action),
         str(reason),
         float(confidence) if confidence is not None else None,
         float(risk) if risk is not None else None,
-        str(sentiment) if sentiment is not None else None,
         float(market_price),
         float(signal_strength) if signal_strength is not None else None,
         bool(executed),
         bool(not executed),
-        str(source)
+        str(source),
+        int(headline_id) if headline_id is not None else None,
+        int(nlp_id) if nlp_id is not None else None
     ))
+
     conn.commit()
     cursor.close()
     conn.close()
