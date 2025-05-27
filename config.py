@@ -11,9 +11,6 @@ DB_PASS = os.getenv("DB_PASS", "Blank-Salamander-Car2")
 BOT_VERSION = os.getenv("BOT_VERSION", "MCP-BOT:v0.0.1")
 NEWSAPI_KEY = os.getenv("NEWSAPI_KEY", "")
 
-# TICKER PROPERTIES
-SYMBOL = os.getenv("SYMBOL", "AAPL")
-
 # RISK ASSESSMENT THRESHOLDS
 RISK_THRESHOLD = float(os.getenv("RISK_THRESHOLD", 0.5))
 CONFIDENCE_THRESHOLD = float(os.getenv("CONFIDENCE_THRESHOLD", 0.6))

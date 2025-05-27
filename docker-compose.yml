@@ -1,7 +1,33 @@
+
 services:
-  mcp-bot:
+  mcp-aapl:
     build: .
     container_name: mcp-aapl
+    environment:
+      SYMBOL: AAPL
+      PYTHONUNBUFFERED: 1
+    env_file:
+      - .env
+    networks:
+      - mcp-network
+
+  mcp-nvda:
+    build: .
+    container_name: mcp-nvda
+    environment:
+      SYMBOL: NVDA
+      PYTHONUNBUFFERED: 1
+    env_file:
+      - .env
+    networks:
+      - mcp-network
+
+  mcp-tsla:
+    build: .
+    container_name: mcp-tsla
+    environment:
+      SYMBOL: TSLA
+      PYTHONUNBUFFERED: 1
     env_file:
       - .env
     networks:
@@ -9,4 +35,3 @@ services:
 
 networks:
   mcp-network:
-
