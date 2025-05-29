@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y \
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Ensure strategies directory exists and is accessible
+RUN mkdir -p /app/strategies/symbol_specific /app/strategies/experimental
+
 # Default command
 CMD ["python", "main.py"]
-

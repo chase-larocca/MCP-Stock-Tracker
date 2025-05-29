@@ -1,0 +1,34 @@
+{
+  "strategy_name": "aapl_aggressive_test_v1",
+  "description": "More aggressive AAPL strategy for testing signal generation",
+  "version": "1.2.0",
+  "created_date": "2025-01-29",
+  
+  "weights": {
+    "rsi": 0.3,
+    "macd": 0.4,
+    "ema_trend": 0.3
+  },
+  
+  "thresholds": {
+    "rsi_oversold": 45,
+    "rsi_overbought": 55,
+    "buy_threshold": 0.2,
+    "sell_threshold": -0.2
+  },
+  
+  "indicators": {
+    "rsi_window": 14,
+    "ema_short": 12,
+    "ema_long": 26,
+    "macd_fast": 12,
+    "macd_slow": 26,
+    "macd_signal": 9
+  },
+  
+  "metadata": {
+    "last_modified_by": "human",
+    "modification_reason": "test_aggressive_signal_generation",
+    "performance_notes": "very aggressive thresholds to test signal generation - NOT FOR PRODUCTION"
+  }
+}

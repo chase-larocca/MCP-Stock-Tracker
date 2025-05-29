@@ -7,7 +7,7 @@ from db.db_connection import get_connection
 from db.log_helpers import insert_headline, insert_nlp_analysis
 
 from data.collector import fetch_price_data
-from analysis.signal_generator import generate_signals
+from analysis.signal_generator import generate_signals, generate_signals_detailed
 from analysis.risk_assessor import assess_risk
 from analysis.nlp_insights import analyze_sentiment
 
@@ -23,9 +23,6 @@ from config import (
 print(f"[BOOT] MCP container starting for SYMBOL={os.getenv('SYMBOL')}", flush=True)
 
 def run_bot():
-
-    print(f"[RUN] Running analysis for {os.getenv('SYMBOL')} at {datetime.now()}", flush=True)
-
     symbol = os.getenv("SYMBOL", "AAPL")
     print(f"[{datetime.now()}] Running analysis for {symbol}")
     
@@ -34,7 +31,21 @@ def run_bot():
         print(f"[{symbol}] No data to analyze.")
         return
 
-    signal = generate_signals(df)
+    # Use the enhanced signal generator with symbol-specific config
+    signal = generate_signals_detailed(df, symbol)
+    
+    # Extract the basic fields for compatibility with existing code
+    action = signal["action"]
+    reason = signal["reason"] 
+    confidence = signal["confidence"]
+    
+    # Optional: Log the detailed breakdown for analysis
+    if "details" in signal and signal["details"]:
+        print(f"[{symbol}] Strategy used: {signal['details'].get('config_used', {}).get('strategy_name', 'default')}")
+        print(f"[{symbol}] Component breakdown:")
+        for component, data in signal['details'].get('components', {}).items():
+            print(f"  - {component}: {data['signal']} (contrib: {data['contribution']:.2f})")
+            
     market_price = df.iloc[-1]['close']
     risk = assess_risk(df)
 
@@ -85,7 +96,7 @@ def run_bot():
 run_bot()
 
 # Schedule every 15 minutes
-schedule.every(15).minutes.do(run_bot)
+schedule.every(1).minutes.do(run_bot)
 
 if __name__ == "__main__":
     while True:
